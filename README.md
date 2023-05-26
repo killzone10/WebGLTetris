@@ -11,7 +11,9 @@
 <kbd>ArrowRight</kbd> or <kbd>d</kbd>: move the object drawn one unit in the positive x direction
 
 <kbd>ArrowLeft</kbd> or <kbd>a</kbd>: move the object drawn one unit in the negative x direction
+
 <kbd>ArrowUp</kbd> or <kbd>w</kbd>: move the object drawn one unit in the negative z direction
+
 <kbd>ArrowDown</kbd> or <kbd>s</kbd>: move the object drawn one unit in the positive z direction
 
 <kbd>x</kbd>: rotate the object drawn 90 degrees counterclockwise around the x axis
@@ -31,15 +33,25 @@
 <kbd>g</kbd>: enable/disable grid
 
 <kbd>j</kbd>: the viewpoint should rotate counterclockwise about the Y-axis around the center of the grid.
+
 <kbd>l</kbd>: the viewpoint should rotate clockwise about the Y-axis around the center of the grid.
+
 <kbd>i</kbd>: the viewpoint should rotate counterclockwise about the X-axis around the center of the grid.
+
 <kbd>k</kbd>: the viewpoint should rotate clockwise about the X-axis around the center of the grid.
+
 <kbd>u</kbd>: the viewpoint should rotate counterclockwise about the Z-axis around the center of the grid.
+
 <kbd>o</kbd>: the viewpoint should rotate clockwise about the Z-axis around the center of the grid.
+
 <kbd>+</kbd>: zoom in
+
 <kbd>-</kbd>: zoom out.
+
 <kbd>v</kbd>: toggle between orthographic and perspective viewing.
+
 <kbd>f</kbd>: change between phong and goraud shading
+
 <kbd>b</kbd>: change between smaller and bigger cubes (change of vertices)
 
 
