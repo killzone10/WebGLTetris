@@ -29,6 +29,16 @@
 "f": change between phong and goraud shading
 "b": change between smaller and bigger cubes (change of vertices)
 
+#### Movement
+| Key              | Description                               |
+|------------------|-------------------------------------------|
+|   <kbd>I</kbd>   | Rotate the camera ccw on the X-Axis around the center of the grid |
+|   <kbd>K</kbd>   | Rotate the camera cw on the X-Axis around the center of the grid |
+|   <kbd>J</kbd>   | Rotate the camera ccw on the Y-Axis around the center of the grid |
+|   <kbd>L</kbd>   | Rotate the camera cw on the Y-Axis around the center of the grid |
+|   <kbd>U</kbd>   | Rotate the camera ccw on the Z-Axis around the center of the grid |
+|   <kbd>O</kbd>   | Rotate the camera cw on the Z-Axis around the center of the grid |
+
 Runs on 
 google chrome
 version 113.0.5672.127 (Oficjalna wersja) (64-bitowa)
