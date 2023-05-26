@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>WegGL Example</title>
+
+    <script type="text/javascript" src="gl-matrix-min.js"></script>
+    <script type="text/javascript" src="globals.js"></script>
+    <script type="text/javascript" src="ShaderProgram.js"></script>
+    <script type="text/javascript" src="Shape.js"></script>
+    <script type="text/javascript" src="helpers.js"></script>
+    <script type="text/javascript" src="local.js"></script>
+    <script type="text/javascript" src="events.js"></script>
+    <script type="text/javascript" src="createShapes.js"></script>
+    <script type="text/javascript" src="TetraShape.js"></script>
+    <script type="text/javascript" src="tetris.js"></script>
+
+
+    <script type="text/javascript" src="main.js"></script>
+
+ 
+    <script id="v-shader" type="x-shader/x-vertex">
+        precision mediump float;
+
+        attribute vec4 vertexPosition; 
+        attribute vec3 vertexNormal;
+        attribute vec2 texPosition;
+        attribute vec4 vertexColor;    
+
+
+        uniform mat4 modelViewMatrix;
+        uniform mat4 viewMatrix;
+        uniform mat4 projectionMatrix;
+        uniform mat3 normalMatrix;
+        uniform mat4 lightMatrix;
+        uniform vec3 lightPos;
+
+        uniform float ambientConst;
+        uniform float diffuseConst;
+        uniform float specularConst;
+
+        varying vec4 fragmentColor;  
+        varying vec2 fragmenttexPosition;
+        
+
+        void main() {
+            // Transform light position to view space
+            vec4 lightPosition = viewMatrix * lightMatrix * vec4(lightPos, 1.0);
+            // Transform vertex position to view space
+            vec4 viewPosition = modelViewMatrix * vertexPosition;
+
+            // Calculate and normalize light vector
+            vec3 lightVector = normalize(lightPosition.xyz - viewPosition.xyz);
+            // Transform and normalize the normal
+            vec3 transformedNormal = normalize(normalMatrix * vertexNormal);
+
+            // Calculate light intensity
+            // This can be negative, so just make negative values 0
+            float lightIntensity = max(dot(lightVector, transformedNormal), 0.0);
+
+            gl_Position = projectionMatrix * viewPosition; 
+            // Multiply vertex color with lightIntensity
+            // set alpha value to 1 again
+            fragmenttexPosition = texPosition * lightIntensity;
+            fragmentColor = vertexColor * lightIntensity;
+
+        }
+    </script>
+
+    <script id="v-shader-gouraud-specular" type="x-shader/x-vertex">
+        precision mediump float;
+
+        attribute vec4 vertexPosition; 
+        attribute vec4 vertexColor;    
+        attribute vec3 vertexNormal;
+        attribute vec2 texPosition;
+
+        uniform mat4 modelViewMatrix;
+        uniform mat4 viewMatrix;
+        uniform mat4 projectionMatrix;
+        uniform mat3 normalMatrix;
+
+
+        uniform vec3 lightPos;
+        uniform mat4 lightMatrix;
+
+        float shiness = 30.0;
+        vec4 specularColor = vec4(1.0 ,1.0, 1.0, 1.0);
+
+        uniform float ambientConst;
+        uniform float diffuseConst;
+        uniform float specularConst;
+
+        varying vec4 fragmentColor;   
+
+        varying vec2 fragmenttexPosition;
+
+
+        void main() {
+            // Transform light position to view space
+            vec4 lightPosition = viewMatrix *lightMatrix* vec4(lightPos, 1.0);
+            // Transform vertex position to view space
+            vec4 viewPosition = modelViewMatrix * vertexPosition;
+
+            // Calculate and normalize light vector
+            vec3 lightVector = normalize(lightPosition.xyz - viewPosition.xyz);
+            // ksIs(E*R)^shiness E = Eye - view R = reflective vector
+
+            // Transform and normalize the normal
+
+            vec3 transformedNormal = normalize(normalMatrix * vertexNormal);
+
+            //ambient
+            vec4 ambientLight = vertexColor * ambientConst;
+
+            // diffuse 
+            float lightIntensity = max(dot(lightVector, transformedNormal), 0.0);
+            vec4 diffuseLight = diffuseConst * vertexColor * lightIntensity;
+
+            // specular
+            vec3 eyeVector = normalize(-viewPosition.xyz);
+            vec3 reflectedVector =  normalize(-reflect(lightVector,transformedNormal));
+            float lightSpecular = pow(max(dot(eyeVector, reflectedVector),0.0),shiness);
+            vec4 specularLight = specularConst *specularColor * lightSpecular;
+            gl_Position = projectionMatrix * viewPosition; 
+            
+            // Multiply vertex color with lightIntensity
+            fragmentColor = ambientLight + diffuseLight+ specularLight;
+            fragmentColor.a = 1.0; 
+            fragmenttexPosition = texPosition * lightIntensity;
+
+        }
+    </script>
+
+
+    <script id="v-shader-phong-diffuse" type="x-shader/x-vertex">
+        precision mediump float;
+
+        attribute vec4 vertexPosition; 
+        attribute vec4 vertexColor;    
+        attribute vec3 vertexNormal;
+        attribute vec2 texPosition;
+
+        uniform mat4 modelViewMatrix;
+        uniform mat4 viewMatrix;
+        uniform mat4 projectionMatrix;
+        uniform mat3 normalMatrix;
+
+
+        varying vec4 fragmentColor;   
+
+        varying vec2 fragmenttexPosition;
+        varying vec4 viewPosition;
+        varying vec3 transformedNormal;
+
+        void main() {
+            viewPosition = modelViewMatrix * vertexPosition;
+            transformedNormal = normalize(normalMatrix * vertexNormal);
+            gl_Position = projectionMatrix * viewPosition; 
+            fragmentColor = vertexColor;
+            fragmentColor.a = 1.0;
+            fragmenttexPosition = texPosition;
+        }
+        </script>
+
+        <script id="f-shader-phong-specular" type="x-shader/x-fragment">
+            precision mediump float;
+
+            uniform mat4 viewMatrix;
+
+            varying vec4 viewPosition;
+            varying vec3 transformedNormal;
+            varying vec2 fragmenttexPosition;
+
+            varying vec4 fragmentColor;
+
+            float shiness = 50.0;
+            vec3 specularColor = vec3(1 ,1, 1);
+            uniform vec3 lightPos;
+            uniform mat4 lightMatrix;
+            uniform sampler2D texture;
+
+            uniform float ambientConst;
+            uniform float diffuseConst;
+            uniform float specularConst;
+
+            void main() {
+                
+                vec4 lightPosition = viewMatrix *lightMatrix* vec4(lightPos, 1.0); // lightPos
+                vec3 lightVector = normalize(lightPosition.xyz - viewPosition.xyz); // lightVector
+                vec3 eyeVector = normalize(-viewPosition.xyz);      // eyeVector
+                vec3 reflectedVector = normalize(-reflect(lightVector,transformedNormal));  // reflected vector
+                //ambient
+                vec3 ambientColor = ambientConst * fragmentColor.rgb;
+
+                // diffuse
+                float lightIntensity = max(dot(lightVector, transformedNormal), 0.0);
+                vec3 diffuseColor =  diffuseConst* lightIntensity * fragmentColor.rgb;
+
+                //specular
+                float lightSpecular = pow(max(dot(eyeVector, reflectedVector),0.0),shiness);
+                vec3 specularColor = specularConst * lightSpecular * specularColor;
+
+                //gl_FragColor = vec4(diffuseColor + ambientColor + specularColor , 1.0);
+                gl_FragColor = texture2D(texture, fragmenttexPosition) *vec4(diffuseColor + ambientColor + specularColor , 1.0);
+      
+            }
+        </script>
+        
+    <script id="f-shader" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec2 fragmenttexPosition;
+        uniform sampler2D texture;
+        varying vec4 fragmentColor;
+        void main() {
+           // gl_FragColor = fragmentColor;
+            gl_FragColor = texture2D(texture, fragmenttexPosition) *fragmentColor;
+            
+
+        }
+    </script>
+  
+ 
+</head>
+
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+
+      <div class="slidecontainer">
+
+        <br>Ambient Light:</br>
+        <input type="range" min="1" max="100" value="5" class="slider" id="Ka">
+        <span id="kaVal"></span>
+
+        <br>Diffuse Light:</br>
+        <input type="range" min="1" max="100" value="70" class="slider" id="Kd">
+        <span id="kdVal"></span>
+
+        <br>Specular Light:</br>
+        <input type="range" min="1" max="100" value="30" class="slider" id="Ks">
+        <span id="ksVal"></span>
+        
+
+   
+      </div>
+</body>
+
+</html>
