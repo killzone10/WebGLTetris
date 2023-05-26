@@ -8,19 +8,27 @@
 ## To run the program use command : python -m  http.server {port}
 <br/>
 
-<kbd>-></kbd> or <kbd>d</kbd>: move the object drawn one unit in the positive x direction
+<kbd>ArrowRight</kbd> or <kbd>d</kbd>: move the object drawn one unit in the positive x direction
 
-<kbd><-</kbd> or <kbd>a</kbd>: move the object drawn one unit in the negative x direction
-<kbd>/\</kbd> or <kbd>w</kbd>: move the object drawn one unit in the negative z direction
-<kbd>\/</kbd> or <kbd>s</kbd>: move the object drawn one unit in the positive z direction
+<kbd>ArrowLeft</kbd> or <kbd>a</kbd>: move the object drawn one unit in the negative x direction
+<kbd>ArrowUp</kbd> or <kbd>w</kbd>: move the object drawn one unit in the negative z direction
+<kbd>ArrowDown</kbd> or <kbd>s</kbd>: move the object drawn one unit in the positive z direction
+
 <kbd>x</kbd>: rotate the object drawn 90 degrees counterclockwise around the x axis
+
 <kbd>X</kbd>: rotate the object drawn 90 degrees clockwise around the x axis
+
 <kbd>y</kbd>: rotate the object drawn 90 degrees counterclockwise around the y axis
+
 <kbd>Y</kbd>: rotate the object drawn 90 degrees clockwise around the y axis
+
 <kbd>z</kbd>: rotate the object drawn 90 degrees counterclockwise around the z axis
+
 <kbd>Z</kbd>: rotate the object drawn 90 degrees clockwise around the z axis
+
 <kbd>p</kbd>: (un)pause the game (i.e. stop/restart gravity) It pauses only gravity and mouse camera movement.
-<kbd>g</kbd>: enable/ disable grid
+
+<kbd>g</kbd>: enable/disable grid
 
 <kbd>j</kbd>: the viewpoint should rotate counterclockwise about the Y-axis around the center of the grid.
 <kbd>l</kbd>: the viewpoint should rotate clockwise about the Y-axis around the center of the grid.
