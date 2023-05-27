@@ -2,10 +2,12 @@
 ## Screenshots:
 ![Layout](layout.png)
 ![Layout1](layout2.png)
+## Demo: https://webgltetris.web.app/
+
 ## Movement and rotations were implemented so game should be normally playable.
 
 # How to run
-## To run the program use command : python -m  http.server {port}
+ To run the program use command : python -m  http.server {port}
 <br/>
 
 <kbd>ArrowRight</kbd> or <kbd>d</kbd>: move the object drawn one unit in the positive x direction
